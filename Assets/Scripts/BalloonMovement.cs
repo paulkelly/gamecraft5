@@ -36,6 +36,16 @@ public class BalloonMovement : MonoBehaviour
 		fan.transform.position = new Vector3(transform.position.x + fanDirection.x, transform.position.y + fanDirection.y, fan.transform.position.z);
 	}
 
+	public void BlowOther(Transform other)
+	{
+		other.GetComponent<BalloonMovement>().GetBlown (fan.transform, fanPower);
+	}
+
+	void GetBlown(Transform blower, float fanPower)
+	{
+		Debug.Log ("Getting blown");
+	}
+
 	public void SetFanPower(float power)
 	{
 		fanPower = power;
