@@ -39,7 +39,10 @@ public class BalloonMovement : MonoBehaviour
 
 	public void BlowOther(Transform other)
 	{
-		other.GetComponent<BalloonMovement>().GetBlown (fan.transform, fanPower);
+		if(other.GetComponent<BalloonMovement>() != null && fan != null)
+		{
+			other.GetComponent<BalloonMovement>().GetBlown (fan.transform, fanPower);
+		}
 	}
 
 	void GetBlown(Transform blower, float otherFanPower)

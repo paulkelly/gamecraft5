@@ -6,7 +6,8 @@ public class FanBlower : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D collider)
 	{
-		if (collider.GetComponent<BalloonMovement> ())
+
+		if (collider.GetComponent<BalloonMovement> () != null)
 		{
 			transform.parent.GetComponent<BalloonMovement> ().BlowOther (collider.transform);
 		}

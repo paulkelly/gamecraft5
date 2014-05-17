@@ -17,7 +17,6 @@ public class FanController : MonoBehaviour {
 	{
 		if(Input.GetButtonDown("P" + playerNum + "Start"))
 		{
-			Debug.Log("P1 hit start");
 		}
 	}
 	

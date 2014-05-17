@@ -19,7 +19,6 @@ public class GameMonitor : MonoBehaviour {
 		} 
 		else if(Instance != this)
 		{
-			Instance.Start ();
 			Destroy(gameObject);
 		}
 
@@ -59,13 +58,30 @@ public class GameMonitor : MonoBehaviour {
 		}
 	}
 
+	public void Restart()
+	{
+		Countdown.Instance.Show ();
+
+		for(int i=0; i<players.Length; i++)
+		{
+			if(players[i] != null)
+			{
+				Destroy(players[i]);
+			}
+		}
+	}
+
+	public void Reset()
+	{
+	}
+
 	public void pop(int playerNum)
 	{
 		deaths[playerNum-1] = true;
 		numDeaths++;
 		if (numDeaths >= numPlayers - 1)
 		{
-
+			Restart ();
 		}
 	}
 
