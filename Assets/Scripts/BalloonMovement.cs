@@ -7,7 +7,7 @@ public class BalloonMovement : MonoBehaviour
 	public float fanForce = 15;
 	public float maxSpeed = 6;
 
-	Vector2 fanDirection = Vector3.up;
+	Vector2 fanDirection = Vector3.down;
 	Vector3 fanRotation = Vector3.down;
 
 	float fanPower = 0f;
@@ -71,5 +71,12 @@ public class BalloonMovement : MonoBehaviour
 			fanRotation = new Vector3( 0, 0, Mathf.Atan2(v, h) * 180 / Mathf.PI);
 			fan.transform.rotation = Quaternion.Euler (fanRotation);
 		}
+	}
+
+	public void Pop()
+	{
+		int playerNum = GetComponent<FanController> ().playerNum;
+		GameMonitor.Instance.pop (playerNum);
+		Destroy (gameObject);
 	}
 }

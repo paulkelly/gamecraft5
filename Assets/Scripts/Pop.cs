@@ -9,9 +9,8 @@ public class Pop : MonoBehaviour {
 	{
 		if (c.gameObject.tag == "Player")
 		{
-			FanController fan = c.gameObject.GetComponent<FanController>();
-			gameMonitor.pop(fan.playerNum);
-			Destroy(c.gameObject);
+			BalloonMovement balloon = c.gameObject.GetComponent<BalloonMovement>();
+			balloon.Pop ();
 		}
 	}
 }

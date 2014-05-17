@@ -12,6 +12,14 @@ public class FanController : MonoBehaviour {
 	{
 		balloon = GetComponent<BalloonMovement>();
 	}
+
+	void Update()
+	{
+		if(Input.GetButtonDown("P" + playerNum + "Start"))
+		{
+			Debug.Log("P1 hit start");
+		}
+	}
 	
 	void FixedUpdate ()
 	{

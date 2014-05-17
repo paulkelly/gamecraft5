@@ -3,15 +3,33 @@ using System.Collections;
 
 public class GameMonitor : MonoBehaviour {
 
+	public static GameMonitor Instance { get; private set;}
+
 	public GameObject player;
 	GameObject[] players;
 	bool[] deaths;
 	public int numPlayers = 4;
 	public int numDeaths = 0;
 
-	// Use this for initialization
-	void Start ()
+	void Awake()
 	{
+		if (Instance == null)
+		{
+			Instance = this;
+		} 
+		else if(Instance != this)
+		{
+			Instance.Start ();
+			Destroy(gameObject);
+		}
+
+		DontDestroyOnLoad (gameObject);
+	}
+	
+	public void Start()
+	{
+		if (Application.loadedLevel != 1)
+						return;
 		players = new GameObject[numPlayers];
 		deaths = new bool[numPlayers];
 
@@ -47,22 +65,7 @@ public class GameMonitor : MonoBehaviour {
 		numDeaths++;
 		if (numDeaths >= numPlayers - 1)
 		{
-			if (!deaths[0])
-			{
 
-			}
-			else if (!deaths[1])
-			{
-
-			}
-			else if (!deaths[2])
-			{
-				
-			}
-			else if (!deaths[3])
-			{
-				
-			}
 		}
 	}
 
