@@ -11,6 +11,7 @@ public class BalloonMovement : MonoBehaviour
 	Vector3 fanRotation = Vector3.down;
 
 	float fanPower = 0f;
+	float getBlownStrength = 10f;
 
 	GameObject fan;
 
@@ -41,9 +42,14 @@ public class BalloonMovement : MonoBehaviour
 		other.GetComponent<BalloonMovement>().GetBlown (fan.transform, fanPower);
 	}
 
-	void GetBlown(Transform blower, float fanPower)
+	void GetBlown(Transform blower, float otherFanPower)
 	{
+		if (otherFanPower > 0)
+		{
+			Vector2 pushDirection = new Vector2(transform.position.x - blower.position.x, transform.position.y - blower.position.y);
 
+			transform.rigidbody2D.AddForce(pushDirection * otherFanPower * getBlownStrength);
+		}
 	}
 
 	public void SetFanPower(float power)
