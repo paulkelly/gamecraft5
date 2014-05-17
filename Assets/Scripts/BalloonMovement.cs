@@ -4,14 +4,14 @@ using System.Collections;
 public class BalloonMovement : MonoBehaviour
 {
 	public float fanRadius = 0.4f;
-	public float fanForce = 1;
-	public float maxSpeed = 5;
+	public float fanForce = 15;
+	public float maxSpeed = 20;
 
 	Vector2 fanDirection = Vector3.up;
 	Vector3 fanRotation = Vector3.down;
 
 	float fanPower = 0f;
-	float getBlownStrength = 10f;
+	float getBlownStrength = 1f;
 
 	GameObject fan;
 
@@ -48,7 +48,11 @@ public class BalloonMovement : MonoBehaviour
 		{
 			Vector2 pushDirection = new Vector2(transform.position.x - blower.position.x, transform.position.y - blower.position.y);
 
-			transform.rigidbody2D.AddForce(pushDirection * otherFanPower * getBlownStrength);
+			float magnitude = 13 - pushDirection.magnitude;
+
+			magnitude = magnitude * magnitude;
+
+			transform.rigidbody2D.AddForce(pushDirection.normalized * magnitude * otherFanPower * getBlownStrength);
 		}
 	}
 
