@@ -17,13 +17,14 @@ public class GameMonitor : MonoBehaviour {
 		for (int i = 0; i < numPlayers; i++)
 		{
 			players[i] = (GameObject)Instantiate(player);
+			players[i].GetComponent<FanController>().playerNum = i+1;
 			deaths[i] = false;
 		}
 	}
 
 	public void pop(int playerNum)
 	{
-		deaths[playerNum] = true;
+		deaths[playerNum-1] = true;
 		numDeaths++;
 		Debug.Log(playerNum);
 		/*if (numDeaths >= numPlayers - 1)

@@ -5,13 +5,13 @@ public class Pop : MonoBehaviour {
 
 	public GameMonitor gameMonitor;
 
-	void OnTriggerEnter(Collider other)
+	void OnCollisionEnter2D(Collision2D c)
 	{
-		if (other.gameObject.tag == "Player")
+		if (c.gameObject.tag == "Player")
 		{
-			FanController fan = other.gameObject.GetComponent<FanController>();
+			FanController fan = c.gameObject.GetComponent<FanController>();
 			gameMonitor.pop(fan.playerNum);
-			Destroy(other.gameObject);
+			Destroy(c.gameObject);
 		}
 	}
 }
