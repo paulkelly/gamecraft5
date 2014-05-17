@@ -16,8 +16,8 @@ public class FanController : MonoBehaviour {
 	void FixedUpdate ()
 	{
 		#if CROSS_PLATFORM_INPUT
-		float h = CrossPlatformInput.GetAxis("Horizontal");
-		float v = CrossPlatformInput.GetAxis("Vertical");
+		float h = CrossPlatformInput.GetAxis("P" + playerNum + "Horizontal");
+		float v = CrossPlatformInput.GetAxis("P" + playerNum + "Vertical");
 		#else
 		float h = Input.GetAxis("P" + playerNum + "Horizontal");
 		float v = Input.GetAxis("P" + playerNum + "Vertical");
