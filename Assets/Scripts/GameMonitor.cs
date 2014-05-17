@@ -14,11 +14,30 @@ public class GameMonitor : MonoBehaviour {
 	{
 		players = new GameObject[numPlayers];
 		deaths = new bool[numPlayers];
-		for (int i = 0; i < numPlayers; i++)
+
+		players[0] = (GameObject)Instantiate(player, new Vector3(-1f, 1f, 0f), Quaternion.identity);
+		players[0].GetComponent<FanController>().playerNum = 1;
+		deaths[0] = false;
+
+		if (numPlayers > 1)
 		{
-			players[i] = (GameObject)Instantiate(player);
-			players[i].GetComponent<FanController>().playerNum = i+1;
-			deaths[i] = false;
+			players[1] = (GameObject)Instantiate(player, new Vector3(1f, 1f, 0f), Quaternion.identity);
+			players[1].GetComponent<FanController>().playerNum = 2;
+			deaths[1] = false;
+		}
+
+		if (numPlayers > 2)
+		{
+			players[2] = (GameObject)Instantiate(player, new Vector3(-1f, -1f, 0f), Quaternion.identity);
+			players[2].GetComponent<FanController>().playerNum = 3;
+			deaths[2] = false;
+		}
+
+		if (numPlayers > 3)
+		{
+			players[3] = (GameObject)Instantiate(player, new Vector3(1f, -1f, 0f), Quaternion.identity);
+			players[3].GetComponent<FanController>().playerNum = 4;
+			deaths[3] = false;
 		}
 	}
 
