@@ -5,7 +5,7 @@ public class BalloonMovement : MonoBehaviour
 {
 	public float fanRadius = 0.4f;
 	public float fanForce = 15;
-	public float maxSpeed = 20;
+	public float maxSpeed = 6;
 
 	Vector2 fanDirection = Vector3.up;
 	Vector3 fanRotation = Vector3.down;
