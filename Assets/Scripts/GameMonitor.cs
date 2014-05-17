@@ -45,11 +45,25 @@ public class GameMonitor : MonoBehaviour {
 	{
 		deaths[playerNum-1] = true;
 		numDeaths++;
-		Debug.Log(playerNum);
-		/*if (numDeaths >= numPlayers - 1)
+		if (numDeaths >= numPlayers - 1)
 		{
-			Debug.Log(playerNum);
-		}*/
+			if (!deaths[0])
+			{
+
+			}
+			else if (!deaths[1])
+			{
+
+			}
+			else if (!deaths[2])
+			{
+				
+			}
+			else if (!deaths[3])
+			{
+				
+			}
+		}
 	}
 
 }
