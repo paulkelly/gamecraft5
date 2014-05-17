@@ -3,11 +3,15 @@ using System.Collections;
 
 public class Pop : MonoBehaviour {
 
-	void OnTriggerEnter(Collider other)
+	public GameMonitor gameMonitor;
+
+	void OnCollisionEnter2D(Collision2D c)
 	{
-		if (other.gameObject.tag == "Player")
+		if (c.gameObject.tag == "Player")
 		{
-			Destroy(other.gameObject);
+			FanController fan = c.gameObject.GetComponent<FanController>();
+			gameMonitor.pop(fan.playerNum);
+			Destroy(c.gameObject);
 		}
 	}
 }
