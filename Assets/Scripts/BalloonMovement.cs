@@ -43,7 +43,7 @@ public class BalloonMovement : MonoBehaviour
 
 	void GetBlown(Transform blower, float fanPower)
 	{
-		Debug.Log ("Getting blown");
+
 	}
 
 	public void SetFanPower(float power)
