@@ -44,10 +44,12 @@ public class BalloonFaceAnim : MonoBehaviour {
 
 		if(death){
 			anim.SetTrigger("Death");
+			Debug.Log ("Done Death");
 			death = false;
 		}
 		if(reset){
 			anim.SetTrigger("Reset");
+			Debug.Log("Done Reset");
 			reset = false;
 		}
 
@@ -59,7 +61,7 @@ public class BalloonFaceAnim : MonoBehaviour {
 
 	}
 
-	public void Pop(){ death = true;}
+	public void Pop(){ death = true;Debug.Log ("POP");}
 	public void Reset() { reset = true;}
 
 

@@ -19,6 +19,8 @@ public class GameMonitor : MonoBehaviour {
 
 	public int winsNeeded = 5;
 
+	bool started = false;
+
 	void Awake()
 	{
 		if (Instance == null)
@@ -36,15 +38,27 @@ public class GameMonitor : MonoBehaviour {
 	
 	public void Start()
 	{
+
 		if (Application.loadedLevel != 1)
 						return;
-
-		for(int i=0; i<numPlayers; i++)
+		if(started)
 		{
-			players[i] = (GameObject)Instantiate(player, GetSpawnPoint(), Quaternion.identity);
-			players[i].GetComponent<FanController>().playerNum = i+1;
-			players[i].GetComponent<BalloonMovement>().SetColor(playerColors[i]);
+			for(int i=0; i<numPlayers; i++)
+			{
+				players[i].GetComponent<BalloonMovement>().Reset(GetSpawnPoint());
+			}
 		}
+		else
+		{
+			for(int i=0; i<numPlayers; i++)
+			{
+				players[i] = (GameObject)Instantiate(player, GetSpawnPoint(), Quaternion.identity);
+				players[i].GetComponent<FanController>().playerNum = i+1;
+				players[i].GetComponent<BalloonMovement>().SetColor(playerColors[i]);
+			}
+		}
+
+		started = true;
 	}
 
 	Vector3 GetSpawnPoint()
@@ -66,22 +80,24 @@ public class GameMonitor : MonoBehaviour {
 		usedSpawners.Clear ();
 		for(int i=0; i<players.Length; i++)
 		{
-			if(players[i] != null)
+			if(!players[i].GetComponent<BalloonMovement>().popped)
 			{
 				wins[i]++;
-				Destroy(players[i]);
 
 				if(wins[i] >= winsNeeded)
 				{
 					EndGame (i+1);
 				}
-				else
-				{
-					//Start next round
-					Countdown.Instance.Show ();
-				}
 			}
 		}
+
+		//Start next round
+		Invoke ("StartTimer", 1f);
+	}
+
+	void StartTimer()
+	{
+		Countdown.Instance.Show ();
 	}
 
 	public void EndGame(int winner)
@@ -94,6 +110,7 @@ public class GameMonitor : MonoBehaviour {
 	{
 		players = new GameObject[numPlayers];
 		wins = new int[numPlayers];
+		numDeaths = 0;
 
 		for(int i=0; i<players.Length; i++)
 		{
@@ -103,7 +120,6 @@ public class GameMonitor : MonoBehaviour {
 
 	public void pop(int playerNum)
 	{
-		players[playerNum-1] = null;
 		numDeaths++;
 		if (numDeaths >= numPlayers - 1)
 		{

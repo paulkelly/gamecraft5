@@ -3,11 +3,13 @@ using System.Collections;
 
 public class BalloonMovement : MonoBehaviour
 {
+	public bool popped = false;
+
 	public float fanRadius = 0.4f;
 	public float fanForce = 15f;
 	public float maxSpeed = 6f;
 
-	Vector2 offset = new Vector2(0, 0.5f);
+	Vector2 offset = new Vector2(0, 0.4f);
 
 	Vector2 fanDirection = Vector3.down;
 	Vector3 fanRotation = Vector3.down;
@@ -58,6 +60,11 @@ public class BalloonMovement : MonoBehaviour
 
 	void GetBlown(Transform blower, float otherFanPower)
 	{
+		if(popped)
+		{
+			return;
+		}
+
 		if (otherFanPower > 0)
 		{
 			Vector2 pushDirection = new Vector2(transform.position.x - blower.position.x, transform.position.y - blower.position.y);
@@ -71,6 +78,12 @@ public class BalloonMovement : MonoBehaviour
 
 	public void SetFanPower(float power)
 	{
+
+		if(popped)
+		{
+			return;
+		}
+
 		fanPower = power;
 		if(fanPower > 0)
 		{
@@ -84,6 +97,11 @@ public class BalloonMovement : MonoBehaviour
 
 	public void Move(float h, float v)
 	{
+		if(popped)
+		{
+			return;
+		}
+
 		Vector2 direction = new Vector2 (h, v);
 
 		if (direction.magnitude > 0.6f)
@@ -96,9 +114,22 @@ public class BalloonMovement : MonoBehaviour
 
 	public void Pop()
 	{
+		if(popped)
+		{
+			return;
+		}
 		int playerNum = GetComponent<FanController> ().playerNum;
 		GameMonitor.Instance.pop (playerNum);
-		Destroy (gameObject);
+		popped = true;
+		rigidbody2D.velocity = Vector3.zero;
+		GetComponent<BalloonFaceAnim> ().Pop ();
+	}
+
+	public void Reset(Vector3 pos)
+	{
+		transform.position = pos;
+		popped = false;
+		GetComponent<BalloonFaceAnim> ().Reset ();
 	}
 
 	public void SetColor(Color newColor)
