@@ -5,6 +5,9 @@ public class PlayerMenu : MonoBehaviour {
 
 	public int playerNumber = 1;
 
+	public Sprite PressStart;
+	public Sprite PressA;
+
 	bool playerJoined = false;
 	bool playerReady = false;
 
@@ -18,6 +21,7 @@ public class PlayerMenu : MonoBehaviour {
 		playerJoined = true;
 		playerReady = false;
 		renderer.material.color = Color.red;
+		transform.FindChild("PlayerSelected").GetComponent<SpriteRenderer> ().sprite = PressA;
 
 		MenuManager.Instance.PlayerJoin (playerNumber);
 	}
@@ -26,6 +30,7 @@ public class PlayerMenu : MonoBehaviour {
 	{
 		playerJoined = false;
 		renderer.material.color = Color.white;
+		transform.FindChild("PlayerSelected").GetComponent<SpriteRenderer> ().sprite = PressStart;
 
 		MenuManager.Instance.PlayerLeave (playerNumber);
 	}

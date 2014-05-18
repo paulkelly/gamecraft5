@@ -4,10 +4,13 @@ using System.Collections.Generic;
 
 public class GameMonitor : MonoBehaviour {
 
+	public Sprite[] number;
+	
 	public static GameMonitor Instance { get; private set;}
 
 	public GameObject player;
 	GameObject[] players;
+	bool[] knockedOut;
 	public GameObject[] spawners;
 	List<GameObject> usedSpawners = new List<GameObject>();
 
@@ -45,7 +48,7 @@ public class GameMonitor : MonoBehaviour {
 		{
 			for(int i=0; i<numPlayers; i++)
 			{
-				players[i].GetComponent<BalloonMovement>().Reset(GetSpawnPoint());
+				players[i].GetComponent<BalloonMovement>().froze = false;
 			}
 		}
 		else
@@ -56,6 +59,8 @@ public class GameMonitor : MonoBehaviour {
 				players[i].GetComponent<FanController>().playerNum = i+1;
 				players[i].GetComponent<BalloonMovement>().SetColor(playerColors[i]);
 			}
+
+			Countdown.Instance.Show ();
 		}
 
 		started = true;
@@ -80,9 +85,11 @@ public class GameMonitor : MonoBehaviour {
 		usedSpawners.Clear ();
 		for(int i=0; i<players.Length; i++)
 		{
-			if(!players[i].GetComponent<BalloonMovement>().popped)
+			if(!knockedOut[i])
 			{
 				wins[i]++;
+
+				UpdateScore();
 
 				if(wins[i] >= winsNeeded)
 				{
@@ -92,17 +99,30 @@ public class GameMonitor : MonoBehaviour {
 		}
 
 		//Start next round
-		Invoke ("StartTimer", 1f);
+		Invoke ("StartTimer", 3f);
+	}
+
+	void UpdateScore()
+	{
+		for(int i=0; i<numPlayers; i++)
+		{
+			GameObject.Find("Player" + (i+1) + "Score").GetComponent<SpriteRenderer>().sprite = number[wins[i]];
+		}
 	}
 
 	void StartTimer()
 	{
+		for(int i=0; i<numPlayers; i++)
+		{
+			players[i].GetComponent<BalloonMovement>().Reset(GetSpawnPoint());
+		}
 		Countdown.Instance.Show ();
 	}
 
 	public void EndGame(int winner)
 	{
 		Debug.Log("Player " + winner + "won.");
+		Countdown.Instance.Hide ();
 		Application.LoadLevel (0);
 	}
 
@@ -110,17 +130,22 @@ public class GameMonitor : MonoBehaviour {
 	{
 		players = new GameObject[numPlayers];
 		wins = new int[numPlayers];
+		knockedOut = new bool[numPlayers];
 		numDeaths = 0;
 
 		for(int i=0; i<players.Length; i++)
 		{
 			wins[i] = 0;
+			knockedOut[i] = false;
 		}
+
+		UpdateScore();
 	}
 
 	public void pop(int playerNum)
 	{
 		numDeaths++;
+		knockedOut [playerNum - 1] = true;
 		if (numDeaths >= numPlayers - 1)
 		{
 			Restart ();

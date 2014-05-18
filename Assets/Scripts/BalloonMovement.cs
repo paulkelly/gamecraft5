@@ -14,6 +14,7 @@ public class BalloonMovement : MonoBehaviour
 	Vector2 fanDirection = Vector3.down;
 	Vector3 fanRotation = Vector3.down;
 
+	public bool froze = false;
 	float fanPower = 0f;
 	float getBlownStrength = 0.5f;
 
@@ -79,8 +80,9 @@ public class BalloonMovement : MonoBehaviour
 	public void SetFanPower(float power)
 	{
 
-		if(popped)
+		if(popped || froze)
 		{
+			fanPower = 0;
 			return;
 		}
 
@@ -121,12 +123,14 @@ public class BalloonMovement : MonoBehaviour
 		int playerNum = GetComponent<FanController> ().playerNum;
 		GameMonitor.Instance.pop (playerNum);
 		popped = true;
-		rigidbody2D.velocity = Vector3.zero;
+		rigidbody2D.velocity = Vector2.zero;
 		GetComponent<BalloonFaceAnim> ().Pop ();
 	}
 
 	public void Reset(Vector3 pos)
 	{
+		rigidbody2D.velocity = Vector2.zero;
+		froze = true;
 		transform.position = pos;
 		popped = false;
 		GetComponent<BalloonFaceAnim> ().Reset ();
