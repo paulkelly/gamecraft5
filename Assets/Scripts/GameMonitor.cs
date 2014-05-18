@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameMonitor : MonoBehaviour {
 
@@ -7,6 +8,11 @@ public class GameMonitor : MonoBehaviour {
 
 	public GameObject player;
 	GameObject[] players;
+	public GameObject[] spawners;
+	List<GameObject> usedSpawners = new List<GameObject>();
+
+	public Color[] playerColors;
+
 	int[] wins;
 	public int numPlayers = 4;
 	public int numDeaths = 0;
@@ -33,30 +39,28 @@ public class GameMonitor : MonoBehaviour {
 		if (Application.loadedLevel != 1)
 						return;
 
-		players[0] = (GameObject)Instantiate(player, new Vector3(-1f, 1f, 0f), Quaternion.identity);
-		players[0].GetComponent<FanController>().playerNum = 1;
-
-		if (numPlayers > 1)
+		for(int i=0; i<numPlayers; i++)
 		{
-			players[1] = (GameObject)Instantiate(player, new Vector3(1f, 1f, 0f), Quaternion.identity);
-			players[1].GetComponent<FanController>().playerNum = 2;
+			players[i] = (GameObject)Instantiate(player, GetSpawnPoint(), Quaternion.identity);
+			players[i].GetComponent<FanController>().playerNum = i+1;
+			players[i].renderer.material.color = playerColors [i];
 		}
+	}
 
-		if (numPlayers > 2)
+	Vector3 GetSpawnPoint()
+	{
+		int i = Random.Range (0, spawners.Length);
+		while(usedSpawners.Contains(spawners[i]))
 		{
-			players[2] = (GameObject)Instantiate(player, new Vector3(-1f, -1f, 0f), Quaternion.identity);
-			players[2].GetComponent<FanController>().playerNum = 3;
+			i = Random.Range (0, spawners.Length);
 		}
-
-		if (numPlayers > 3)
-		{
-			players[3] = (GameObject)Instantiate(player, new Vector3(1f, -1f, 0f), Quaternion.identity);
-			players[3].GetComponent<FanController>().playerNum = 4;
-		}
+		usedSpawners.Add (spawners[i]);
+		return spawners [i].transform.position;
 	}
 
 	public void Restart()
 	{
+		usedSpawners.Clear ();
 		for(int i=0; i<players.Length; i++)
 		{
 			if(players[i] != null)
@@ -79,7 +83,7 @@ public class GameMonitor : MonoBehaviour {
 
 	public void EndGame(int winner)
 	{
-		Debug.Log("Player " + winner + "won.");
+		Debug.Log("Player " + winner + " won.");
 		Application.LoadLevel (0);
 	}
 

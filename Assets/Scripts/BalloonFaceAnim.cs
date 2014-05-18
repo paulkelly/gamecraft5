@@ -4,6 +4,8 @@ using System.Collections;
 public class BalloonFaceAnim : MonoBehaviour {
 
 	private bool attack;
+	private bool death = false;
+	private bool reset = false;
 
 	private float random;
 	private float timer;
@@ -39,6 +41,16 @@ public class BalloonFaceAnim : MonoBehaviour {
 			if(anim.GetBool("Attack") != false)
 				anim.SetBool("Attack",false);
 		}
+
+		if(death){
+			anim.SetTrigger("Death");
+			death = false;
+		}
+		if(reset){
+			anim.SetTrigger("Reset");
+			reset = false;
+		}
+
 	}
 
 	public void Attack(bool b){
@@ -46,6 +58,9 @@ public class BalloonFaceAnim : MonoBehaviour {
 		attack = b;
 
 	}
+
+	public void Pop(){ death = true;}
+	public void Reset() { reset = true;}
 
 
 }
