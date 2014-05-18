@@ -100,4 +100,9 @@ public class BalloonMovement : MonoBehaviour
 		GameMonitor.Instance.pop (playerNum);
 		Destroy (gameObject);
 	}
+
+	public void SetColor(Color newColor)
+	{
+		gameObject.transform.FindChild ("Balloon").renderer.material.color = newColor;
+	}
 }

@@ -43,16 +43,19 @@ public class GameMonitor : MonoBehaviour {
 		{
 			players[i] = (GameObject)Instantiate(player, GetSpawnPoint(), Quaternion.identity);
 			players[i].GetComponent<FanController>().playerNum = i+1;
-			players[i].renderer.material.color = playerColors [i];
+			players[i].GetComponent<BalloonMovement>().SetColor(playerColors[i]);
 		}
 	}
 
 	Vector3 GetSpawnPoint()
 	{
 		int i = Random.Range (0, spawners.Length);
-		while(usedSpawners.Contains(spawners[i]))
+		int max = 20;
+		int j = 0;
+		while(usedSpawners.Contains(spawners[i]) && j<max)
 		{
 			i = Random.Range (0, spawners.Length);
+			j++;
 		}
 		usedSpawners.Add (spawners[i]);
 		return spawners [i].transform.position;
@@ -83,7 +86,7 @@ public class GameMonitor : MonoBehaviour {
 
 	public void EndGame(int winner)
 	{
-		Debug.Log("Player " + winner + " won.");
+		Debug.Log("Player " + winner + "won.");
 		Application.LoadLevel (0);
 	}
 

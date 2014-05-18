@@ -66,6 +66,7 @@ public class Countdown : MonoBehaviour {
 		}
 		else
 		{
+			enable = false;
 			GameMonitor.Instance.Start();
 			Hide ();
 		}
