@@ -18,6 +18,8 @@ public class GameMonitor : MonoBehaviour {
 
 	public int numPlayers = 4;
 	public int numDeaths = 0;
+	
+	int[] playerMappings = new int[4];
 
 	bool started = false;
 	bool gameOver = false;
@@ -36,6 +38,11 @@ public class GameMonitor : MonoBehaviour {
 		}
 
 		DontDestroyOnLoad (gameObject);
+	}
+	
+	public void SetPlayerMappings(int[] newMappings)
+	{
+		playerMappings = newMappings;
 	}
 	
 	public void Start()
@@ -60,6 +67,8 @@ public class GameMonitor : MonoBehaviour {
 				players[i].GetComponent<FanController>().playerNum = i+1;
 				players[i].GetComponent<BalloonMovement>().SetColor(playerColors[i]);
 				players[i].GetComponent<BalloonMovement>().froze = true;
+				players[i].GetComponent<FanController>().controllerNum = playerMappings[i];
+				Debug.Log("Player " + i+1 + " set to controller " + playerMappings[i]);
 			}
 		}
 

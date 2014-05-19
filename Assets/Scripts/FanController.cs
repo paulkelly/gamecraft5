@@ -7,6 +7,7 @@ public class FanController : MonoBehaviour, GameEvents.GameEventListener
 {
 
 	public int playerNum = 1;
+	public int controllerNum = 1;
 
 	private BalloonMovement balloon;
 
@@ -49,7 +50,7 @@ public class FanController : MonoBehaviour, GameEvents.GameEventListener
 		if(e.GetType().Name.Equals("InputEvent"))
 		{
 			InputEvent inputEvent = (InputEvent) e;
-			if(inputEvent.GetPlayerNumber() == playerNum)
+			if(inputEvent.GetPlayerNumber() == controllerNum)
 			{
 				GetInput(inputEvent.GetDevice());
 			}
