@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 [RequireComponent(typeof(BalloonMovement))]
-public class FanController : MonoBehaviour {
+public class FanController : MonoBehaviour, GameEvents.GameEventListener
+{
 
 	public int playerNum = 1;
 
@@ -10,7 +12,14 @@ public class FanController : MonoBehaviour {
 
 	void Start()
 	{
+		GameEvents.GameEventManager.registerListener(this);
+		
 		balloon = GetComponent<BalloonMovement>();
+	}
+	
+	void OnDisable()
+	{
+		GameEvents.GameEventManager.unregisterListener(this);
 	}
 
 	void Update()
@@ -18,13 +27,13 @@ public class FanController : MonoBehaviour {
 
 	}
 	
-	void FixedUpdate ()
+	void GetInput (InputDevice inputDevice)
 	{
-		float h = Input.GetAxis("P" + playerNum + "Horizontal");
-		float v = Input.GetAxis("P" + playerNum + "Vertical");
+		float h = inputDevice.LeftStickX;
+		float v = inputDevice.LeftStickY;
 
-		float f = Input.GetAxis("P" + playerNum + "Trigger");
-		if(f == 0 && Input.GetButton("P" + playerNum + "A"))
+		float f = inputDevice.RightTrigger;
+		if(f == 0 && inputDevice.Action1)
 		{
 			f = 1;
 		}
@@ -33,5 +42,18 @@ public class FanController : MonoBehaviour {
 
 		balloon.SetFanPower(f);
 
+	}
+	
+	public void receiveEvent(GameEvents.GameEvent e)
+	{
+		if(e.GetType().Name.Equals("InputEvent"))
+		{
+			InputEvent inputEvent = (InputEvent) e;
+			if(inputEvent.GetPlayerNumber() == playerNum)
+			{
+				GetInput(inputEvent.GetDevice());
+			}
+		}
+		
 	}
 }

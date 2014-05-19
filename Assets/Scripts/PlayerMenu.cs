@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
-public class PlayerMenu : MonoBehaviour {
+public class PlayerMenu : MonoBehaviour, GameEvents.GameEventListener
+{
 
 	public int playerNumber = 1;
 
@@ -12,8 +14,15 @@ public class PlayerMenu : MonoBehaviour {
 	bool playerReady = false;
 
 	void Start()
-	{
+	{		
+		GameEvents.GameEventManager.registerListener(this);
+		
 		renderer.material.color = Color.white;
+	}
+	
+	void OnDisable()
+	{
+		GameEvents.GameEventManager.unregisterListener(this);
 	}
 
 	void Join()
@@ -52,9 +61,9 @@ public class PlayerMenu : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update ()
-	{
-		if(Input.GetButtonDown("P" + playerNumber + "Start"))
+	void GetInput (InputDevice inputDevice)
+	{	
+		if(inputDevice.MenuWasPressed)
 		{
 			Join ();
 		}
@@ -63,21 +72,36 @@ public class PlayerMenu : MonoBehaviour {
 		{
 			if(!playerReady)
 			{
-				if(Input.GetButtonDown("P" + playerNumber + "A"))
+				if(inputDevice.Action1)
 				{
 					Ready ();
 				}
-				if(Input.GetButtonDown("P" + playerNumber + "B"))
+				if(inputDevice.Action2)
 				{
 					Leave ();
 				}
 			} else
 			{
-				if(Input.GetButtonDown("P" + playerNumber + "B"))
+				if(inputDevice.Action2)
 				{
 					Unready ();
 				}
 			}
 		}
 	}
+	
+	public void receiveEvent(GameEvents.GameEvent e)
+	{
+		if(e.GetType().Name.Equals("InputEvent"))
+		{
+			InputEvent inputEvent = (InputEvent) e;
+			if(inputEvent.GetPlayerNumber() == playerNumber)
+			{
+				GetInput(inputEvent.GetDevice());
+			}
+		}
+		
+	}
+	
+	
 }

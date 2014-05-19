@@ -84,12 +84,10 @@ public class GameMonitor : MonoBehaviour {
 	{
 		usedSpawners.Clear ();
 		numDeaths = 0;
-		Debug.Log ("Restarting");
 		for(int i=0; i<players.Length; i++)
 		{
 			if(!knockedOut[i])
 			{
-				Debug.Log ("Player " + i+1 + " gains a point");
 				GameObject.Find("ScoreManager").GetComponent<ScoreManager>().AwardWin(i+1);
 			}
 		}
@@ -105,7 +103,6 @@ public class GameMonitor : MonoBehaviour {
 			return;
 		}
 		numDeaths = 0;
-		Debug.Log ("Starting Timer");
 		for(int i=0; i<numPlayers; i++)
 		{
 			players[i].GetComponent<BalloonMovement>().Reset(GetSpawnPoint());
