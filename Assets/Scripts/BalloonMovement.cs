@@ -11,8 +11,8 @@ public class BalloonMovement : MonoBehaviour
 
 	Vector2 offset = new Vector2(0, 0.4f);
 
-	Vector2 fanDirection = Vector3.down;
-	Vector3 fanRotation = Vector3.down;
+	Vector2 fanDirection = Vector3.right;
+	Vector3 fanRotation = Vector3.right;
 
 	public bool froze = false;
 	float fanPower = 0f;
@@ -20,12 +20,16 @@ public class BalloonMovement : MonoBehaviour
 
 	GameObject fan;
 	GameObject balloon;
+	
+	ParticleSystem particleSystem;
 
 	// Use this for initialization
 	void Start ()
 	{
-		fan = gameObject.transform.FindChild ("Fan").gameObject;
-		balloon = gameObject.transform.FindChild ("Balloon").FindChild("Face").gameObject;
+		fan = transform.FindChild ("Fan").gameObject;
+		balloon = transform.FindChild ("Balloon").FindChild("Face").gameObject;
+		particleSystem = fan.transform.FindChild("Particle System").GetComponent<ParticleSystem>();
+		particleSystem.enableEmission = false;
 		fanDirection = fanRotation * fanRadius;
 	}
 
@@ -83,6 +87,7 @@ public class BalloonMovement : MonoBehaviour
 		if(popped || froze)
 		{
 			fanPower = 0;
+			particleSystem.enableEmission = false;
 			return;
 		}
 
@@ -90,10 +95,12 @@ public class BalloonMovement : MonoBehaviour
 		if(fanPower > 0)
 		{
 			GetComponent<BalloonFaceAnim>().Attack(true);
+			particleSystem.enableEmission = true;
 		}
 		else
 		{
 			GetComponent<BalloonFaceAnim>().Attack(false);
+			particleSystem.enableEmission = false;
 		}
 	}
 

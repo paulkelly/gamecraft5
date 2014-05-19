@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class GameMonitor : MonoBehaviour {
 
-	public Sprite[] number;
 	public int winner = 1;
 	
 	public static GameMonitor Instance { get; private set;}
@@ -17,13 +16,11 @@ public class GameMonitor : MonoBehaviour {
 
 	public Color[] playerColors;
 
-	int[] wins;
 	public int numPlayers = 4;
 	public int numDeaths = 0;
 
-	public int winsNeeded = 5;
-
 	bool started = false;
+	bool gameOver = false;
 
 	void Awake()
 	{
@@ -33,7 +30,8 @@ public class GameMonitor : MonoBehaviour {
 		} 
 		else if(Instance != this)
 		{
-			Instance.Reset();
+			started = false;
+			Instance.Start();
 			Destroy(gameObject);
 		}
 
@@ -54,14 +52,15 @@ public class GameMonitor : MonoBehaviour {
 		}
 		else
 		{
+			Reset();
+			
 			for(int i=0; i<numPlayers; i++)
 			{
 				players[i] = (GameObject)Instantiate(player, GetSpawnPoint(), Quaternion.identity);
 				players[i].GetComponent<FanController>().playerNum = i+1;
 				players[i].GetComponent<BalloonMovement>().SetColor(playerColors[i]);
+				players[i].GetComponent<BalloonMovement>().froze = true;
 			}
-
-			Countdown.Instance.Show ();
 		}
 
 		started = true;
@@ -91,14 +90,7 @@ public class GameMonitor : MonoBehaviour {
 			if(!knockedOut[i])
 			{
 				Debug.Log ("Player " + i+1 + " gains a point");
-				wins[i]++;
-
-				UpdateScore();
-
-				if(wins[i] >= winsNeeded)
-				{
-					EndGame (i+1);
-				}
+				GameObject.Find("ScoreManager").GetComponent<ScoreManager>().AwardWin(i+1);
 			}
 		}
 
@@ -106,23 +98,12 @@ public class GameMonitor : MonoBehaviour {
 		Invoke ("StartTimer", 3f);
 	}
 
-	void UpdateScore()
-	{
-		if (Application.loadedLevel != 1)
-			return;
-
-		for(int i=0; i<numPlayers; i++)
-		{
-			GameObject.Find("Player" + (i+1) + "Score").GetComponent<SpriteRenderer>().sprite = number[wins[i]];
-		}
-		for(int i=numPlayers; i<4; i++)
-		{
-			GameObject.Find("Player" + (i+1) + "Score").GetComponent<SpriteRenderer>().sprite = number[0];
-		}
-	}
-
 	void StartTimer()
 	{
+		if(gameOver)
+		{	
+			return;
+		}
 		numDeaths = 0;
 		Debug.Log ("Starting Timer");
 		for(int i=0; i<numPlayers; i++)
@@ -135,30 +116,31 @@ public class GameMonitor : MonoBehaviour {
 
 	public void EndGame(int winner)
 	{
+		gameOver = true;
 		this.winner = winner;
 		Countdown.Instance.Hide ();
-		Invoke ("GoToEndScreen", 3f);
+		Invoke ("GoToEndScreen", 4f);
 	}
 
 	void GoToEndScreen()
 	{
+		Countdown.Instance.Hide ();
 		Application.LoadLevel (2);
 	}
 
 	public void Reset()
 	{
+		gameOver = false;
 		players = new GameObject[numPlayers];
-		wins = new int[numPlayers];
+		GameObject.Find("ScoreManager").GetComponent<ScoreManager>().Reset(numPlayers);
 		knockedOut = new bool[numPlayers];
 		numDeaths = 0;
 
 		for(int i=0; i<players.Length; i++)
 		{
-			wins[i] = 0;
 			knockedOut[i] = false;
 		}
 
-		UpdateScore();
 	}
 
 	public void pop(int playerNum)

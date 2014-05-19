@@ -15,24 +15,19 @@ public class FanController : MonoBehaviour {
 
 	void Update()
 	{
-		if(Input.GetButtonDown("P" + playerNum + "Start"))
-		{
-		}
+
 	}
 	
 	void FixedUpdate ()
 	{
-		#if CROSS_PLATFORM_INPUT
-		float h = CrossPlatformInput.GetAxis("P" + playerNum + "Horizontal");
-		float v = CrossPlatformInput.GetAxis("P" + playerNum + "Vertical");
-
-		float f = CrossPlatformInput.GetAxis("P" + playerNum + "Trigger");
-		#else
 		float h = Input.GetAxis("P" + playerNum + "Horizontal");
 		float v = Input.GetAxis("P" + playerNum + "Vertical");
 
 		float f = Input.GetAxis("P" + playerNum + "Trigger");
-		#endif
+		if(f == 0 && Input.GetButton("P" + playerNum + "A"))
+		{
+			f = 1;
+		}
 
 		balloon.Move (h, v);
 
