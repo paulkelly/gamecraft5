@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GameMonitor : MonoBehaviour {
 
 	public Sprite[] number;
+	public int winner = 1;
 	
 	public static GameMonitor Instance { get; private set;}
 
@@ -83,10 +84,13 @@ public class GameMonitor : MonoBehaviour {
 	public void Restart()
 	{
 		usedSpawners.Clear ();
+		numDeaths = 0;
+		Debug.Log ("Restarting");
 		for(int i=0; i<players.Length; i++)
 		{
 			if(!knockedOut[i])
 			{
+				Debug.Log ("Player " + i+1 + " gains a point");
 				wins[i]++;
 
 				UpdateScore();
@@ -104,26 +108,41 @@ public class GameMonitor : MonoBehaviour {
 
 	void UpdateScore()
 	{
+		if (Application.loadedLevel != 1)
+			return;
+
 		for(int i=0; i<numPlayers; i++)
 		{
 			GameObject.Find("Player" + (i+1) + "Score").GetComponent<SpriteRenderer>().sprite = number[wins[i]];
+		}
+		for(int i=numPlayers; i<4; i++)
+		{
+			GameObject.Find("Player" + (i+1) + "Score").GetComponent<SpriteRenderer>().sprite = number[0];
 		}
 	}
 
 	void StartTimer()
 	{
+		numDeaths = 0;
+		Debug.Log ("Starting Timer");
 		for(int i=0; i<numPlayers; i++)
 		{
 			players[i].GetComponent<BalloonMovement>().Reset(GetSpawnPoint());
+			knockedOut[i] = false;
 		}
 		Countdown.Instance.Show ();
 	}
 
 	public void EndGame(int winner)
 	{
-		Debug.Log("Player " + winner + "won.");
+		this.winner = winner;
 		Countdown.Instance.Hide ();
-		Application.LoadLevel (0);
+		Invoke ("GoToEndScreen", 3f);
+	}
+
+	void GoToEndScreen()
+	{
+		Application.LoadLevel (2);
 	}
 
 	public void Reset()
