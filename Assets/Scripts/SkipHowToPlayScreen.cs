@@ -15,7 +15,7 @@ public class SkipHowToPlayScreen : MonoBehaviour {
 	{
 		InputManager.Update();
 		
-		if(InputManager.ActiveDevice.MenuWasPressed)
+		if(InputManager.ActiveDevice.MenuWasPressed || InputManager.ActiveDevice.Action1)
 		{
 			Application.LoadLevel(1);
 		}

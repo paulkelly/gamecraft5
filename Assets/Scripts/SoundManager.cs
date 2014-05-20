@@ -20,8 +20,8 @@ public class SoundManager : MonoBehaviour
 		DontDestroyOnLoad (gameObject);
 	}
 	
-	public float minPitch = 0.5f;
-	public float maxPitch = 1.5f;
+	public float minPitch = 0.7f;
+	public float maxPitch = 1.4f;
 	
 	public AudioClip[] pop;
 	public float minPopVolume = 0.25f;

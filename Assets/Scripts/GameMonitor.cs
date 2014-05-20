@@ -23,6 +23,8 @@ public class GameMonitor : MonoBehaviour {
 
 	bool started = false;
 	bool gameOver = false;
+	
+	bool restarting = false;
 
 	void Awake()
 	{
@@ -104,7 +106,7 @@ public class GameMonitor : MonoBehaviour {
 	Vector3 GetSpawnPoint()
 	{
 		int i = Random.Range (0, spawners.Length);
-		int max = 20;
+		int max = 40;
 		int j = 0;
 		while(usedSpawners.Contains(spawners[i]) && j<max)
 		{
@@ -121,6 +123,8 @@ public class GameMonitor : MonoBehaviour {
 
 	public void Restart()
 	{
+		if(restarting) return;
+		restarting = true;
 		usedSpawners.Clear ();
 		numDeaths = 0;
 		for(int i=0; i<numPlayers; i++)
@@ -147,6 +151,7 @@ public class GameMonitor : MonoBehaviour {
 			SpawnPlayer(i+1, true);
 		}
 		Countdown.Instance.Show ();
+		restarting = false;
 	}
 
 	public void EndGame(int winner)
@@ -178,14 +183,14 @@ public class GameMonitor : MonoBehaviour {
 
 	public void pop(int playerNum)
 	{
-		if (Application.loadedLevel != 2)
+		if (Application.loadedLevel != 2 || restarting)
 			return;
 			
 		numDeaths++;
 		knockedOut [playerNum - 1] = true;
 		Celebration();
 		
-		if (numDeaths >= numPlayers - 1)
+		if (numDeaths == numPlayers - 1)
 		{
 			Restart ();
 		}
