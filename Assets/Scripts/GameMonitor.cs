@@ -9,8 +9,8 @@ public class GameMonitor : MonoBehaviour {
 	public static GameMonitor Instance { get; private set;}
 
 	public GameObject player;
-	GameObject[] players;
-	bool[] knockedOut;
+	GameObject[] players = new GameObject[4];
+	bool[] knockedOut = new bool[4];
 	public GameObject[] spawners;
 	List<GameObject> usedSpawners = new List<GameObject>();
 
@@ -48,7 +48,7 @@ public class GameMonitor : MonoBehaviour {
 	public void Start()
 	{
 
-		if (Application.loadedLevel != 1)
+		if (Application.loadedLevel != 2)
 						return;
 		if(started)
 		{
@@ -63,16 +63,42 @@ public class GameMonitor : MonoBehaviour {
 			
 			for(int i=0; i<numPlayers; i++)
 			{
-				players[i] = (GameObject)Instantiate(player, GetSpawnPoint(), Quaternion.identity);
-				players[i].GetComponent<FanController>().playerNum = i+1;
-				players[i].GetComponent<BalloonMovement>().SetColor(playerColors[i]);
-				players[i].GetComponent<BalloonMovement>().froze = true;
-				players[i].GetComponent<FanController>().controllerNum = playerMappings[i];
-				Debug.Log("Player " + i+1 + " set to controller " + playerMappings[i]);
+				SpawnPlayer(i+1, true);
 			}
 		}
 
 		started = true;
+	}
+	
+	public void SpawnPlayer(int number, bool freeze)
+	{
+		if(players[number-1] == null)
+		{
+			players[number-1] = (GameObject)Instantiate(player, GetSpawnPoint(), Quaternion.identity);
+			players[number-1].GetComponent<FanController>().playerNum = number;
+			players[number-1].GetComponent<BalloonMovement>().SetColor(playerColors[number-1]);
+			players[number-1].GetComponent<FanController>().controllerNum = playerMappings[number-1];
+		}
+		else
+		{
+			players[number-1].GetComponent<FanController>().controllerNum = playerMappings[number-1];
+			players[number-1].GetComponent<BalloonMovement>().Reset(GetSpawnPoint());
+			knockedOut[number-1] = false;
+		}
+		
+		if(freeze)
+		{
+			players[number-1].GetComponent<BalloonMovement>().froze = true;
+		}
+		else
+		{
+			players[number-1].GetComponent<BalloonMovement>().froze = false;
+		}
+	}
+	
+	public void PopPlayer(int number)
+	{
+		players[number-1].GetComponent<BalloonMovement>().Pop();
 	}
 
 	Vector3 GetSpawnPoint()
@@ -85,6 +111,10 @@ public class GameMonitor : MonoBehaviour {
 			i = Random.Range (0, spawners.Length);
 			j++;
 		}
+		if(j >= max)
+		{
+			usedSpawners.Clear ();
+		}
 		usedSpawners.Add (spawners[i]);
 		return spawners [i].transform.position;
 	}
@@ -93,7 +123,7 @@ public class GameMonitor : MonoBehaviour {
 	{
 		usedSpawners.Clear ();
 		numDeaths = 0;
-		for(int i=0; i<players.Length; i++)
+		for(int i=0; i<numPlayers; i++)
 		{
 			if(!knockedOut[i])
 			{
@@ -114,8 +144,7 @@ public class GameMonitor : MonoBehaviour {
 		numDeaths = 0;
 		for(int i=0; i<numPlayers; i++)
 		{
-			players[i].GetComponent<BalloonMovement>().Reset(GetSpawnPoint());
-			knockedOut[i] = false;
+			SpawnPlayer(i+1, true);
 		}
 		Countdown.Instance.Show ();
 	}
@@ -131,15 +160,13 @@ public class GameMonitor : MonoBehaviour {
 	void GoToEndScreen()
 	{
 		Countdown.Instance.Hide ();
-		Application.LoadLevel (2);
+		Application.LoadLevel (3);
 	}
 
 	public void Reset()
 	{
 		gameOver = false;
-		players = new GameObject[numPlayers];
 		GameObject.Find("ScoreManager").GetComponent<ScoreManager>().Reset(numPlayers);
-		knockedOut = new bool[numPlayers];
 		numDeaths = 0;
 
 		for(int i=0; i<players.Length; i++)
@@ -151,11 +178,30 @@ public class GameMonitor : MonoBehaviour {
 
 	public void pop(int playerNum)
 	{
+		if (Application.loadedLevel != 2)
+			return;
+			
 		numDeaths++;
 		knockedOut [playerNum - 1] = true;
+		Celebration();
+		
 		if (numDeaths >= numPlayers - 1)
 		{
 			Restart ();
+		}
+	}
+	
+	public void Celebration()
+	{
+		for(int i=0; i<players.Length; i++)
+		{
+			if(players[i] != null && players[i].GetComponent<BalloonFaceAnim>())
+			{
+				if(!players[i].GetComponent<BalloonMovement>().popped)
+				{
+					players[i].GetComponent<BalloonFaceAnim>().Celebrate();
+				}
+			}
 		}
 	}
 

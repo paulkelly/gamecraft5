@@ -109,6 +109,23 @@ public class MenuManager : MonoBehaviour {
 
 	void StartGame(int players)
 	{
+		SetPlayerMappings();
+	
+		for (int i=0; i<maxPlayers; i++)
+		{
+			playerJoined [i] = false;
+			playerReady [i] = false;
+		}
+		allReady = false;
+		startCountdownRem = startCountdown;
+
+		GameMonitor.Instance.numPlayers = players;
+		Application.LoadLevel (2);
+
+	}
+	
+	public void SetPlayerMappings()
+	{
 		int[] playerMappings = new int[maxPlayers];
 		
 		int j=0;
@@ -120,18 +137,7 @@ public class MenuManager : MonoBehaviour {
 				j++;
 			}
 		}
-	
-		for (int i=0; i<maxPlayers; i++)
-		{
-			playerJoined [i] = false;
-			playerReady [i] = false;
-		}
-		allReady = false;
-		startCountdownRem = startCountdown;
-
+		
 		GameMonitor.Instance.SetPlayerMappings(playerMappings);
-		GameMonitor.Instance.numPlayers = players;
-		Application.LoadLevel (1);
-
 	}
 }

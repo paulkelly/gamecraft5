@@ -50,6 +50,15 @@ public class PlayerMenu : MonoBehaviour, GameEvents.GameEventListener
 		renderer.material.color = Color.green;
 
 		MenuManager.Instance.PlayerReady (playerNumber);
+		
+		int[] defaultMappings = new int[4];
+		for(int i=0; i<4; i++)
+		{
+			defaultMappings[i] = i+1;
+		}
+		GameMonitor.Instance.SetPlayerMappings(defaultMappings);
+
+		GameMonitor.Instance.SpawnPlayer(playerNumber, false);
 	}
 
 	void Unready()
@@ -58,6 +67,7 @@ public class PlayerMenu : MonoBehaviour, GameEvents.GameEventListener
 		renderer.material.color = Color.red;
 
 		MenuManager.Instance.PlayerUnready (playerNumber);
+		GameMonitor.Instance.PopPlayer(playerNumber);
 	}
 	
 	// Update is called once per frame

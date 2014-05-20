@@ -6,6 +6,7 @@ public class BalloonFaceAnim : MonoBehaviour {
 	private bool attack;
 	private bool death = false;
 	private bool reset = false;
+	private bool celebrate = false;
 
 	private float random;
 	private float timer;
@@ -33,6 +34,10 @@ public class BalloonFaceAnim : MonoBehaviour {
 			timer = 0f;
 		}
 
+		if(celebrate){
+			anim.SetTrigger("Celebrate");
+			celebrate = false;
+		}
 		if(attack){
 			if(anim.GetBool("Attack") != true)  
 				anim.SetBool("Attack",true);
@@ -44,12 +49,10 @@ public class BalloonFaceAnim : MonoBehaviour {
 
 		if(death){
 			anim.SetTrigger("Death");
-			Debug.Log ("Done Death");
 			death = false;
 		}
 		if(reset){
 			anim.SetTrigger("Reset");
-			Debug.Log("Done Reset");
 			reset = false;
 		}
 
@@ -61,7 +64,8 @@ public class BalloonFaceAnim : MonoBehaviour {
 
 	}
 
-	public void Pop(){ death = true;Debug.Log ("POP");}
+	public void Pop(){ death = true; celebrate = false;}
+	public void Celebrate(){ celebrate = true; }
 	public void Reset() { reset = true;}
 
 
