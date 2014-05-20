@@ -43,7 +43,7 @@ public class Countdown : MonoBehaviour {
 	{
 		count = t;
 		enable = true;
-		GetComponent<SpriteRenderer> ().sprite = three;
+		GetComponent<SpriteRenderer> ().sprite = null;
 		GetComponent<SpriteRenderer> ().enabled = true;
 	}
 
@@ -66,6 +66,7 @@ public class Countdown : MonoBehaviour {
 		}
 		else
 		{
+			SoundManager.Instance.Beep0();
 			enable = false;
 			GameMonitor.Instance.Start();
 			Hide ();
@@ -76,15 +77,24 @@ public class Countdown : MonoBehaviour {
 	{
 		if(t > 2)
 		{
-			GetComponent<SpriteRenderer> ().sprite = three;
+			if(GetComponent<SpriteRenderer> ().sprite != three)
+			{
+				GetComponent<SpriteRenderer> ().sprite = three;
+				SoundManager.Instance.Beep3();
+			}
 		}
 		else if(t > 1)
 		{
-			GetComponent<SpriteRenderer> ().sprite = two;
+			if(GetComponent<SpriteRenderer> ().sprite != two)
+			{
+				GetComponent<SpriteRenderer> ().sprite = two;
+				SoundManager.Instance.Beep2();
+			}
 		}
-		else
+		else if(GetComponent<SpriteRenderer> ().sprite != one)
 		{
 			GetComponent<SpriteRenderer> ().sprite = one;
+			SoundManager.Instance.Beep1();
 		}
 	}
 }

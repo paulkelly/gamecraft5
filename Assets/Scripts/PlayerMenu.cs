@@ -48,6 +48,7 @@ public class PlayerMenu : MonoBehaviour, GameEvents.GameEventListener
 	{
 		playerReady = true;
 		renderer.material.color = Color.green;
+		transform.FindChild("PlayerSelected").GetComponent<SpriteRenderer> ().enabled = false;
 
 		MenuManager.Instance.PlayerReady (playerNumber);
 		
@@ -65,6 +66,7 @@ public class PlayerMenu : MonoBehaviour, GameEvents.GameEventListener
 	{
 		playerReady = false;
 		renderer.material.color = Color.red;
+		transform.FindChild("PlayerSelected").GetComponent<SpriteRenderer> ().enabled = true;
 
 		MenuManager.Instance.PlayerUnready (playerNumber);
 		GameMonitor.Instance.PopPlayer(playerNumber);
@@ -86,13 +88,13 @@ public class PlayerMenu : MonoBehaviour, GameEvents.GameEventListener
 				{
 					Ready ();
 				}
-				if(inputDevice.Action2)
+				if(inputDevice.Action2.WasPressed)
 				{
 					Leave ();
 				}
 			} else
 			{
-				if(inputDevice.Action2)
+				if(inputDevice.Action2.WasPressed)
 				{
 					Unready ();
 				}

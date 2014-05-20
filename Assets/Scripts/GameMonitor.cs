@@ -34,7 +34,7 @@ public class GameMonitor : MonoBehaviour {
 		} 
 		else if(Instance != this)
 		{
-			started = false;
+			Instance.started = false;
 			Instance.Start();
 			Destroy(gameObject);
 		}

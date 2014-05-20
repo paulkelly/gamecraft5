@@ -22,6 +22,7 @@ public class InputHandler : MonoBehaviour
 		else if(Instance != this)
 		{
 			Destroy(gameObject);
+			return;
 		}
 
 		//InputManager.EnableXInput = true;
@@ -50,7 +51,6 @@ public class InputHandler : MonoBehaviour
 			
 			if(newDevice && i < 4)
 			{
-				Debug.Log("New device registered");
 				device.Add(InputManager.ActiveDevice);
 				i++;	
 			}
